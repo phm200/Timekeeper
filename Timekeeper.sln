@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Time", "Time\Time.csproj", "{36F200CC-866A-48CA-AF37-72950E10094C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTestApp", "ConsoleTestApp\ConsoleTestApp.csproj", "{68182C44-780F-420F-A66F-CF9AA463613A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{36F200CC-866A-48CA-AF37-72950E10094C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36F200CC-866A-48CA-AF37-72950E10094C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36F200CC-866A-48CA-AF37-72950E10094C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36F200CC-866A-48CA-AF37-72950E10094C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68182C44-780F-420F-A66F-CF9AA463613A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68182C44-780F-420F-A66F-CF9AA463613A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68182C44-780F-420F-A66F-CF9AA463613A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68182C44-780F-420F-A66F-CF9AA463613A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
