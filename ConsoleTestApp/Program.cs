@@ -37,7 +37,6 @@ namespace Phm.Time.ConsoleTestApp
             TimekeeperClock.Now = () => new DateTime(2010,2,17,2,59,59);
             tk.Start();
             System.Console.ReadLine();
-            System.Threading.Thread.Sleep(100);
             TimekeeperClock.Now = () => new DateTime(2010,2,17,3,0,1);
             System.Console.WriteLine("Press enter to exit.");
             System.Console.ReadLine();
