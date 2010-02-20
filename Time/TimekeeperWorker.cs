@@ -75,7 +75,7 @@ namespace Phm.Time
                                                      {
                                                          var result = taskToExecute.Execute(entry.ScheduledTime);
                                                          var worker = (TimekeeperWorker)state;
-                                                         worker.CompletedHandler(taskToExecute, result);
+                                                         worker.ReportCompleted(taskToExecute, result);
                                                      }
                                                      catch (Exception e)
                                                      {
