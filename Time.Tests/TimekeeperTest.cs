@@ -83,6 +83,30 @@ namespace Phm.Time.Tests
             Assert.AreEqual(1, numberTimesExecuted);
             tt.Stop();
         }
+
+        [Test]
+        public void Should_Execute_Scheduled_Task_At_Scheduled_Time()
+        {
+            var tt = new Timekeeper();
+            int numberTimesExecuted = 0;
+            var incrementTimesExecuted = new Task
+            {
+                Execute = dt =>
+                {
+                    numberTimesExecuted += 1;
+                    return new TaskResult { Message = "Incremented" };
+                },
+                FriendlyName = "Increment Times Executed"
+            };
+            tt.ScheduleFor(new TimeSpan(9,22,45), incrementTimesExecuted);
+            TimekeeperClock.Now = () => new DateTime(2010, 2, 22, 9, 0, 22);
+            tt.Start();
+            System.Threading.Thread.Sleep(200);//let timekeeper tick
+            TimekeeperClock.Now = () => new DateTime(2010, 2, 22, 9, 23, 1);
+            System.Threading.Thread.Sleep(200);//let timekeeper tick
+            Assert.AreEqual(1, numberTimesExecuted);
+            tt.Stop();
+        }
     }
 }
 
