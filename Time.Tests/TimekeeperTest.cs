@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Phm.Time.Tests
@@ -105,6 +106,64 @@ namespace Phm.Time.Tests
             TimekeeperClock.Now = () => new DateTime(2010, 2, 22, 9, 23, 1);
             System.Threading.Thread.Sleep(200);//let timekeeper tick
             Assert.AreEqual(1, numberTimesExecuted);
+            tt.Stop();
+        }
+
+        [Test]
+        public void Should_Execute_One_AM_Task_Twice_On_Jump_Back_DST()
+        {
+            var tt = new Timekeeper();
+            int numberTimesExecuted = 0;
+            var incrementTimesExecuted = new Task
+            {
+                Execute = dt =>
+                {
+                    numberTimesExecuted += 1;
+                    return new TaskResult { Message = "Incremented" };
+                },
+                FriendlyName = "Increment Times Executed"
+            };
+            tt.ScheduleFor(new TimeSpan(1,0,0), incrementTimesExecuted);
+            TimekeeperClock.Now = () => new DateTime(2010, 3, 14, 0, 59, 59);
+            tt.Start();
+            System.Threading.Thread.Sleep(200);//let timekeeper tick
+            TimekeeperClock.Now = () => new DateTime(2010, 3, 14, 1, 0, 01);
+            System.Threading.Thread.Sleep(200);//let timekeeper tick
+            TimekeeperClock.Now = () => new DateTime(2010, 3, 14, 1, 59, 59);
+            System.Threading.Thread.Sleep(200);//let timekeeper tick
+            TimekeeperClock.Now = () => new DateTime(2010, 3, 14, 1, 0,01);
+            System.Threading.Thread.Sleep(200);//let timekeeper tick
+            Assert.AreEqual(2, numberTimesExecuted);
+            tt.Stop();
+        }
+
+        [Test]
+        public void Should_Execute_One_AM_And_3_AM_And_Not_2_AM_Task_On_Jump_Forward_DST()
+        {
+            var tt = new Timekeeper();
+            List<int> hoursExecuted = new List<int>();
+            var addHourToExecuted = new Task
+                                             {
+                                                 Execute = dt =>
+                                                               {
+                                                                   hoursExecuted.Add(dt.Hour);
+                                                                   return new TaskResult();
+                                                               }
+                                             };
+
+            tt.ScheduleForEveryHour(addHourToExecuted);
+            TimekeeperClock.Now = () => new DateTime(2010, 3, 14, 0, 59, 59);
+            tt.Start();
+            System.Threading.Thread.Sleep(200);//let timekeeper tick
+            TimekeeperClock.Now = () => new DateTime(2010, 3, 14, 1, 0, 01);
+            System.Threading.Thread.Sleep(200);//let timekeeper tick
+            TimekeeperClock.Now = () => new DateTime(2010, 3, 14, 1, 59, 59);
+            System.Threading.Thread.Sleep(200);//let timekeeper tick
+            TimekeeperClock.Now = () => new DateTime(2010, 3, 14, 3, 0, 01);
+            System.Threading.Thread.Sleep(200);//let timekeeper tick
+            Assert.Contains(1, hoursExecuted);
+            Assert.Contains(3, hoursExecuted);
+            Assert.False(hoursExecuted.Contains(2));
             tt.Stop();
         }
     }
