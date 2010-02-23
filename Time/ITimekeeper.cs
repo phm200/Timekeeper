@@ -4,11 +4,11 @@ namespace Phm.Time
 {
     public interface ITimekeeper
     {
-        Action<Task, Exception> ExceptionHandler { get; set; }
-        Action<Task, TaskResult> CompletedHandler { get; set; }
-        void ScheduleFor(TimeSpan timeOfDay, Task task);
-        void ScheduleForEveryDay(Task task);
-        void ScheduleForEveryHour(Task task);
+        event Action<ITask, Exception> ExceptionHandler;
+        event Action<ITask, TaskResult> CompletedHandler;
+        void ScheduleFor(TimeSpan timeOfDay, ITask task);
+        void ScheduleForEveryDay(ITask task);
+        void ScheduleForEveryHour(ITask task);
         void Start();
         void Stop();
     }

@@ -19,7 +19,7 @@ namespace Phm.Time
             get { return TimeUntil < _zero; }
         }
 
-        public List<Task> Tasks = new List<Task>();
+        public List<ITask> Tasks = new List<ITask>();
 
         public TimetableEntry NextOccurance
         {

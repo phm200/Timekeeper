@@ -7,7 +7,7 @@ namespace Phm.Time
     internal class Timetable
     {
 
-        private readonly Dictionary<TimeSpan, List<Task>> _tasksByTimeSlot;
+        private readonly Dictionary<TimeSpan, List<ITask>> _tasksByTimeSlot;
         private bool _hourSlotsCreated = false;
         private bool _daySlotCreated = false;
         private readonly TimeSpan _dayChangeTimeOfDay = TimeSpan.FromHours(0);
@@ -15,13 +15,13 @@ namespace Phm.Time
 
         internal Timetable()
         {
-            _tasksByTimeSlot = new Dictionary<TimeSpan, List<Task>>();
+            _tasksByTimeSlot = new Dictionary<TimeSpan, List<ITask>>();
         }
 
 
 
         //the time of day will get passed in
-        internal void ScheduleForEveryHour(Task task)
+        internal void ScheduleForEveryHour(ITask task)
         {
             lock (_syncObject)
             {
@@ -32,7 +32,7 @@ namespace Phm.Time
 
 
         //the new day will get passed in
-        internal void ScheduleForEveryDay(Task task)
+        internal void ScheduleForEveryDay(ITask task)
         {
             lock (_syncObject)
             {
@@ -41,7 +41,7 @@ namespace Phm.Time
             }
         }
 
-        internal void ScheduleFor(TimeSpan timeOfDay, Task task)
+        internal void ScheduleFor(TimeSpan timeOfDay, ITask task)
         {
             lock (_syncObject)
             {
@@ -103,12 +103,12 @@ namespace Phm.Time
         {
             for (int i = 1; i <= 23; i++)
             {
-                _tasksByTimeSlot.Add(TimeSpan.FromHours(i), new List<Task>());
+                _tasksByTimeSlot.Add(TimeSpan.FromHours(i), new List<ITask>());
             }
             _hourSlotsCreated = true;
         }
 
-        private void ScheduleInEveryHourSlot(Task task)
+        private void ScheduleInEveryHourSlot(ITask task)
         {
             for (int i = 1; i <= 23; i++)
             {
@@ -118,20 +118,20 @@ namespace Phm.Time
 
         private void CreateDaySlot()
         {
-            _tasksByTimeSlot.Add(_dayChangeTimeOfDay, new List<Task>());
+            _tasksByTimeSlot.Add(_dayChangeTimeOfDay, new List<ITask>());
             _daySlotCreated = true;
         }
 
-        private void ScheduleInDayChangeSlot(Task task)
+        private void ScheduleInDayChangeSlot(ITask task)
         {
             _tasksByTimeSlot[_dayChangeTimeOfDay].Add(task);
         }
 
-        private void ScheduleInSlot(TimeSpan timeOfDay, Task task)
+        private void ScheduleInSlot(TimeSpan timeOfDay, ITask task)
         {
             if (!_tasksByTimeSlot.ContainsKey(timeOfDay))
             {
-                _tasksByTimeSlot.Add(timeOfDay, new List<Task>());
+                _tasksByTimeSlot.Add(timeOfDay, new List<ITask>());
             }
             _tasksByTimeSlot[timeOfDay].Add(task);
         }

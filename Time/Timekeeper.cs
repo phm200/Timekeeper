@@ -23,29 +23,29 @@ namespace Phm.Time
         }
 
 
-        public void ScheduleForEveryHour(Task task)
+        public void ScheduleForEveryHour(ITask task)
         {
             if (task == null) throw new ArgumentNullException("task");
             _timetable.ScheduleForEveryHour(task);
             _logger.DebugFormat("Scheduled {0} for every hour.", task.FriendlyName);
         }
 
-        public void ScheduleForEveryDay(Task task)
+        public void ScheduleForEveryDay(ITask task)
         {
             if (task == null) throw new ArgumentNullException("task");
             _timetable.ScheduleForEveryDay(task);
             _logger.DebugFormat("Scheduled {0} for every day.", task.FriendlyName);
         }
 
-        public Action<Task,TaskResult> CompletedHandler { get; set; }
+        public event Action<ITask, TaskResult> CompletedHandler;
+        public event Action<ITask, Exception> ExceptionHandler;
 
-        public void ScheduleFor(TimeSpan timeOfDay, Task task)
+        public void ScheduleFor(TimeSpan timeOfDay, ITask task)
         {
             _timetable.ScheduleFor(timeOfDay, task);
             _logger.DebugFormat("Scheduled {0} for {1}.", task.FriendlyName, timeOfDay);
         }
 
-        public Action<Task, Exception> ExceptionHandler { get; set; }
 
         public void Start()
         {
@@ -53,8 +53,8 @@ namespace Phm.Time
             _logger.InfoFormat("Timekeeper's internal clock set to tick in {0}", _localTimeZone);
             TimekeeperClock.TimeZone = _localTimeZone;
             _worker = new TimekeeperWorker(_timetable);
-            _worker.ExceptionHandler = ExceptionHandler;
-            _worker.CompletedHandler = CompletedHandler;
+            _worker.ExceptionHandler += ExceptionHandler;
+            _worker.CompletedHandler += CompletedHandler;
             _worker.RunWorkerAsync();
             _logger.Info("Timekeeper started.");
         }
@@ -62,6 +62,8 @@ namespace Phm.Time
         public void Stop()
         {
             _worker.CancelAsync();
+            _worker.ExceptionHandler -= ExceptionHandler;
+            _worker.CompletedHandler -= CompletedHandler;
             _logger.Info("Timekeeper stopped.");
         }
 

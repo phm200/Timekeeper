@@ -13,8 +13,8 @@ namespace Phm.Time
         private readonly Timetable _timetable;
         private TimetableEntry _next;
 
-        internal Action<Task, Exception> ExceptionHandler { get; set; }
-        internal Action<Task, TaskResult> CompletedHandler { get; set; }
+        internal event Action<ITask, Exception> ExceptionHandler;
+        internal event Action<ITask, TaskResult> CompletedHandler;
 
         internal TimekeeperWorker(Timetable timetable)
         {
@@ -87,7 +87,7 @@ namespace Phm.Time
             }
         }
 
-        private bool ReportException(Task task, Exception exception)
+        private bool ReportException(ITask task, Exception exception)
         {
             var handler = ExceptionHandler;
             if (handler != null)
@@ -99,7 +99,7 @@ namespace Phm.Time
             return false;
         }
 
-        private void ReportCompleted(Task task, TaskResult result)
+        private void ReportCompleted(ITask task, TaskResult result)
         {
             var handler = CompletedHandler;
             if (handler != null)
